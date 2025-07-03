@@ -80,35 +80,50 @@ jobs:
         name: akash-myapp-jar
         path: target/*.jar
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: akash-myapp-jar
-        path: target
-
-    - name: List the JAR
-      run: ls -lh target/
+  Build_and_push_docker:
+    runs-on: akash-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: akash-myapp-jar
+          path: target
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ajs3ra8/bank-app:${{ github.run_number }}
  
 
-    - uses: actions/checkout@v4
-      with:
+    # - uses: actions/checkout@v4
+     # with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
-        fetch-depth: 0
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v5.2.0 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        # fetch-depth: 0
+    # - name: SonarQube Scan
+      # uses: SonarSource/sonarqube-scan-action@v5.2.0 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+      # env:
+        # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
       # Check the Quality Gate status.
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      with:
-        pollingTimeoutSec: 600
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} #OPTIONAL
+    # - name: SonarQube Quality Gate check
+      # id: sonarqube-quality-gate-check
+      # uses: sonarsource/sonarqube-quality-gate-action@master
+      # with:
+        # pollingTimeoutSec: 600
+      # env:
+        # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} #OPTIONAL
 
       
 
