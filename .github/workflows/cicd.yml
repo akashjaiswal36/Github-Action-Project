@@ -44,5 +44,35 @@ jobs:
     - name: Gitleaks CodeScan
       run: gitleaks detect source . -r gitleaks-report.json -f json
 
+  Unit-Test:
+    
+    runs-on: akash-ubuntu-latest
+    needs: secuirty-checks
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Test with Maven
+      run: mvn test
+
+  Packaging:
+    
+    runs-on: akash-ubuntu-latest
+    needs: Unit-Test
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Package with Maven
+      run: mvn package
+
       
 
