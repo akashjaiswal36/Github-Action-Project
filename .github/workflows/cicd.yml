@@ -7,7 +7,7 @@ on:
 jobs:
   compile:
     
-    runs-on: akash-ubuntu-latest
+    runs-on: akash-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
 
   secuirty-checks:
     
-    runs-on: akash-ubuntu-latest
+    runs-on: akash-latest
     needs: compile
     
     steps:
@@ -46,7 +46,7 @@ jobs:
 
   Unit-Test:
     
-    runs-on: akash-ubuntu-latest
+    runs-on: akash-latest
     needs: secuirty-checks
     steps:
     - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
 
   Packaging:
     
-    runs-on: akash-ubuntu-latest
+    runs-on: akash-latest
     needs: Unit-Test
     steps:
     - uses: actions/checkout@v4
