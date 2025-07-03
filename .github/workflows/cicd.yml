@@ -82,6 +82,7 @@ jobs:
 
   Build_and_push_docker:
     runs-on: akash-latest
+    needs: Packaging
     steps:
       - uses: actions/checkout@v4
       - name: Download artifact
